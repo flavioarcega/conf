@@ -1,0 +1,59 @@
+#!/bin/sh
+
+####################################################
+# utilitario para manipulação de alternatives node #
+####################################################
+
+BIN=/usr/bin
+LIB=/usr/lib/node
+
+die() { printf "$*\n" >&2; exit 1; }
+
+validarLib() {
+  if [ ! -d /usr/lib/node/$1 ]; then
+    die "$LIB/$1 não encontrado."
+  fi
+}
+
+case "$1" in
+  -i)
+      if [ ! -d $LIB ]; then
+        mkdir -p $LIB
+      fi
+      cd $LIB
+      curl -s https://nodejs.org/dist/$2/node-$2-linux-x64.tar.xz | tar -xaJ > /dev/null 2>&1
+      if [ $? != 0 ]; then
+	die "Versão não encontrada no site do projeto!\n * https://nodejs.org/dist/$2/node-$2-linux-x64.tar.xz"
+      fi
+      mv node-$2-linux-x64 $2
+      validarLib $2
+      update-alternatives --install $BIN/node node $LIB/$2/bin/node $3
+      update-alternatives --install $BIN/npm  npm  $LIB/$2/bin/npm  $3
+      update-alternatives --install $BIN/npx  npx  $LIB/$2/bin/npx  $3
+      ;;
+  -r)
+      validarLib $2
+      update-alternatives --remove  node $LIB/$2/bin/node
+      update-alternatives --remove  npm  $LIB/$2/bin/npm 
+      update-alternatives --remove  npx  $LIB/$2/bin/npx 
+      ;;
+  -list) 
+      update-alternatives --list node
+      ;;
+  -help)
+      echo "Utilitário para instalação de alternatives node."
+      echo
+      echo "Parâmetros:"
+      echo "  -i    - instalar um alternative"
+      echo "  -r    - remover um alternative"
+      echo "  -list - listar os alternatives instalados"
+      ;;
+  *)
+      echo "Utilitário para instalação de alternatives node."
+      echo
+      echo "Parâmetros:"
+      echo "  -i {versao} {prioridade}"
+      echo "  -r {versao}"
+      echo "  -list"
+      echo "  -help"
+esac
