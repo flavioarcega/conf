@@ -17,6 +17,9 @@ validarLib() {
 
 case "$1" in
   -i)
+      if [ -z "$2" ] || [ -z "$3" ]; then
+	die "Syntax: -i {versao} {prioridade}"
+      fi
       if [ ! -d $LIB ]; then
         mkdir -p $LIB
       fi
@@ -32,21 +35,24 @@ case "$1" in
       update-alternatives --install $BIN/npx  npx  $LIB/$2/bin/npx  $3
       ;;
   -r)
+      if [ -z "$2" ]; then
+	die "Syntax: -r {versao}"
+      fi
       validarLib $2
       update-alternatives --remove  node $LIB/$2/bin/node
       update-alternatives --remove  npm  $LIB/$2/bin/npm 
       update-alternatives --remove  npx  $LIB/$2/bin/npx 
       ;;
-  -list) 
+  -l) 
       update-alternatives --list node
       ;;
-  -help)
+  -h)
       echo "Utilitário para instalação de alternatives node."
       echo
       echo "Parâmetros:"
-      echo "  -i    - instalar um alternative"
-      echo "  -r    - remover um alternative"
-      echo "  -list - listar os alternatives instalados"
+      echo "  -i - instalar um alternative"
+      echo "  -r - remover um alternative"
+      echo "  -l - listar os alternatives instalados"
       ;;
   *)
       echo "Utilitário para instalação de alternatives node."
@@ -54,6 +60,6 @@ case "$1" in
       echo "Parâmetros:"
       echo "  -i {versao} {prioridade}"
       echo "  -r {versao}"
-      echo "  -list"
-      echo "  -help"
+      echo "  -l"
+      echo "  -h"
 esac
