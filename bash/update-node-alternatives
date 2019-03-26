@@ -18,7 +18,7 @@ validarLib() {
 case "$1" in
   -i)
       if [ -z "$2" ] || [ -z "$3" ]; then
-	die "Syntax: -i {versao} {prioridade}"
+      die "Syntax: -i {versao} {prioridade}"
       fi
       if [ ! -d $LIB ]; then
         mkdir -p $LIB
@@ -26,22 +26,20 @@ case "$1" in
       cd $LIB
       curl -s https://nodejs.org/dist/$2/node-$2-linux-x64.tar.xz | tar -xaJ > /dev/null 2>&1
       if [ $? != 0 ]; then
-	die "Versão não encontrada no site do projeto!\n * https://nodejs.org/dist/$2/node-$2-linux-x64.tar.xz"
+      die "Versão não encontrada no site do projeto!\n * https://nodejs.org/dist/$2/node-$2-linux-x64.tar.xz"
       fi
       mv node-$2-linux-x64 $2
       validarLib $2
-      update-alternatives --install $BIN/node node $LIB/$2/bin/node $3
-      update-alternatives --install $BIN/npm  npm  $LIB/$2/bin/npm  $3
-      update-alternatives --install $BIN/npx  npx  $LIB/$2/bin/npx  $3
+      update-alternatives --install $BIN/node node $LIB/$2/bin/node $3 \
+                            --slave $BIN/npm  npm  $LIB/$2/bin/npm  \
+                            --slave $BIN/npx  npx  $LIB/$2/bin/npx
       ;;
   -r)
       if [ -z "$2" ]; then
-	die "Syntax: -r {versao}"
+      die "Syntax: -r {versao}"
       fi
       validarLib $2
       update-alternatives --remove  node $LIB/$2/bin/node
-      update-alternatives --remove  npm  $LIB/$2/bin/npm 
-      update-alternatives --remove  npx  $LIB/$2/bin/npx 
       ;;
   -l) 
       update-alternatives --list node

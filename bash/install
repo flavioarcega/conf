@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+sudo curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/bash/update-node-alternatives -o /usr/local/bin/update-node-alternatives && sudo chmod +x /usr/local/bin/update-node-alternatives
