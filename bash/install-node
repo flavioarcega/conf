@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 if [ `which node` ]; then
   echo "Primeiro, remova a instalação do node de sua máquina com o comando:"

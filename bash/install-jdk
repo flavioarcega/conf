@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Como aparentemente é feito hoje no debian
+# for bin in /usr/lib/jvm/jdk-11.0.2/bin/*; do update-alternatives --install /usr/bin/$(basename $bin) $(basename $bin) $bin 100; done
+
+if [ "$(id -u)" != "0" ]; then
+    echo "É preciso sudo ou root para executar esse script."
+    exit 1
+fi
+
+echo "Instalando openjdk-11..."
+
+cd /tmp
+wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
+tar -xvf openjdk-11.0.2_linux-x64_bin.tar.gz --directory=/usr/lib/jvm
+
+for bin in /usr/lib/jvm/jdk-11.0.2/bin/*
+do
+  if [ "$(basename $bin)" != "java" ]; then
+    SLAVES="--slave /usr/bin/$(basename $bin) $(basename $bin) $bin $SLAVES"
+  fi
+done
+
+update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-11.0.2/bin/java 1000 $SLAVES
