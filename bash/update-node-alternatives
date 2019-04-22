@@ -15,10 +15,36 @@ validarLib() {
   fi
 }
 
+updateExes() {
+  prioridade=1000
+  update-alternatives --remove-all node 2>&1 > /dev/null
+  MENSAGEM="Executáveis encontrados"
+  for dir in /usr/lib/node/*
+  do
+    SLAVES=""
+    MENSAGEM="$MENSAGEM\n  $(basename $dir):"
+    for bin in $(find $dir/bin -type f,l -executable)
+    do
+      MENSAGEM="$MENSAGEM $(basename $bin)"
+      if [ "$(basename $bin)" != "node" ]; then
+        SLAVES="--slave /usr/bin/$(basename $bin) $(basename $bin) $bin $SLAVES"
+      fi
+    done
+    prioridade=`echo "$prioridade + 10" | bc`
+    update-alternatives --install /usr/bin/node node $dir/bin/node $prioridade $SLAVES 2>&1 > /dev/null
+  done
+  echo $MENSAGEM
+}
+
+if [ "$(id -u)" != "0" ]; then
+    echo "É preciso sudo ou root para executar esse script."
+    exit 1
+fi
+
 case "$1" in
   -i)
-      if [ -z "$2" ] || [ -z "$3" ]; then
-      die "Syntax: -i {versao} {prioridade}"
+      if [ -z "$2" ]; then
+      die "Syntax: -i {versao}"
       fi
       if [ ! -d $LIB ]; then
         mkdir -p $LIB
@@ -30,16 +56,18 @@ case "$1" in
       fi
       mv node-$2-linux-x64 $2
       validarLib $2
-      update-alternatives --install $BIN/node node $LIB/$2/bin/node $3 \
-                            --slave $BIN/npm  npm  $LIB/$2/bin/npm  \
-                            --slave $BIN/npx  npx  $LIB/$2/bin/npx
+      updateExes 
       ;;
   -r)
-      if [ -z "$2" ]; then
-      die "Syntax: -r {versao}"
+      if [ -z "$2" ]
+      then
+        die "Syntax: -r {versao}"
       fi
       validarLib $2
-      update-alternatives --remove  node $LIB/$2/bin/node
+      updateExes
+      ;;
+  -u)
+      updateExes 
       ;;
   -l) 
       update-alternatives --list node
@@ -48,16 +76,12 @@ case "$1" in
       echo "Utilitário para instalação de alternatives node."
       echo
       echo "Parâmetros:"
-      echo "  -i - instalar um alternative"
-      echo "  -r - remover um alternative"
+      echo "  -i - instalar uma versão do node"
+      echo "  -r - remover uma versão do node"
+      echo "  -u - atualizar executáveis node (update)"
       echo "  -l - listar os alternatives instalados"
       ;;
   *)
       echo "Utilitário para instalação de alternatives node."
-      echo
-      echo "Parâmetros:"
-      echo "  -i {versao} {prioridade}"
-      echo "  -r {versao}"
-      echo "  -l"
-      echo "  -h"
+      echo "-h para acessar a ajuda"
 esac
