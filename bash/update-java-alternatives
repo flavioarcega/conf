@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Como aparentemente é feito hoje no debian
+# for bin in /usr/lib/jvm/jdk-11.0.2/bin/*; do update-alternatives --install /usr/bin/$(basename $bin) $(basename $bin) $bin 100; done
+
+if [ "$(id -u)" != "0" ]; then
+    echo "É preciso sudo ou root para executar esse script."
+    exit 1
+fi
+
+echo "Instalando jdks..."
+
+PRIORITY=1000
+update-alternatives --remove-all java &> /dev/null
+for dir in /usr/lib/jvm/java-*; do
+  echo
+  SLAVES=""
+  for bin in $dir/bin/*; do
+    echo "$bin"
+    if [ "$(basename $bin)" != "java" ]; then
+      SLAVES="--slave /usr/bin/$(basename $bin) $(basename $bin) $bin $SLAVES"
+    fi
+  done
+  update-alternatives --install /usr/bin/java java $dir/bin/java $PRIORITY $SLAVES
+  PRIORITY=$(echo "$PRIORITY + 50" | bc)
+done
