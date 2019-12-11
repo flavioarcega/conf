@@ -1,9 +1,9 @@
 NodeJS
 ```bash
-curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/bash/install-node | sudo sh
+curl -sO https://raw.githubusercontent.com/flavioarcega/utils/master/bash/update-alternatives-node
 ```
 
 Openjdk
 ```bash
-curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/bash/install-jdk | sudo sh
+curl -sO https://raw.githubusercontent.com/flavioarcega/utils/master/bash/update-alternatives-java
 ```

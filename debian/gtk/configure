@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo cp settings.ini /etc/gtk-3.0/
+if [ ! -d ~/.config/autostart ]
+then
+  mkdir ~/.config/autostart
+fi
+cp chromium.desktop ~/.config/autostart/

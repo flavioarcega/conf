@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+    echo "É preciso sudo ou root para executar esse script."
+    exit 1
+fi
+
+# Pacotes essenciais
+apt install -y curl git-core network-manager-gnome vim-gnome --no-install-recommends
+
+# Removendo pacotes desnecessarios do gnome-core
+#sudo apt purge -y empathy gnome-contacts firefox-esr gnome-packagekit gnome-dictionary gnome-online-accounts gnome-online-miners gnome-system-log gnome-user-guide gnome-user-share vim-tiny totem
+apt autoremove -y && apt autoclean
+
+# Instalando as apps
+apt install -y chromium blender gimp gimp-data-extras inkscape ffmpeg file-roller
+apt install -y libreoffice-writer libreoffice-calc --no-install-recommends
+pip install youtube-dl
+
+# Configurações padrão
+git config --global branch.autosetuprebase always
+cp settings.ini /etc/gtk-3.0/
+if [ ! -d ~/.config/autostart ]
+then
+  mkdir ~/.config/autostart
+fi
+cp chromium.desktop ~/.config/autostart/
+curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/debian/.bash_aliases -o ~/.bash_aliases
+
+# Script de configuração do vim
+curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/configure | sh
+
+# Configurando scripts e plugins
+echo "Para habilitar addons em nivel de usuario execute:"
+echo "$ vim-addons install closetag surround taglist youcompleteme markdown ctrlp"
