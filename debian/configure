@@ -6,7 +6,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Pacotes essenciais
-apt install -y curl git-core network-manager-gnome vim-gnome --no-install-recommends
+apt install -y curl git-core network-manager-gnome --no-install-recommends
 
 # Removendo pacotes desnecessarios do gnome-core
 #sudo apt purge -y empathy gnome-contacts firefox-esr gnome-packagekit gnome-dictionary gnome-online-accounts gnome-online-miners gnome-system-log gnome-user-guide gnome-user-share vim-tiny totem
@@ -25,7 +25,8 @@ then
   mkdir ~/.config/autostart
 fi
 cp chromium.desktop ~/.config/autostart/
-curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/debian/.bash_aliases -o ~/.bash_aliases
+curl --create-dirs -sfLo ~/.bash_aliases \
+  https://raw.githubusercontent.com/flavioarcega/utils/master/debian/.bash_aliases
 
 # Script de configuração do vim
 curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/configure | sh

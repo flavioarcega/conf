@@ -1,2 +1,1 @@
-# utils
 Códigos quebra-galho

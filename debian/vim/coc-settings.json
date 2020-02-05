@@ -1,0 +1,6 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["markdown", "java", "python", "css", "javascript", "typescript"],
+  "python.linting.flake8Enabled": true,
+  "deno.enable": true,
+  "java.home": "/usr/lib/jvm/java-8-openjdk"
+}

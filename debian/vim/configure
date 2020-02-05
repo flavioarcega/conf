@@ -8,12 +8,15 @@ fi
 # Script de configuração do vim
 dpkg -s vim | grep -q installed
 if [ ! $? ]; then
-    apt install -y exuberant-ctags vim vim-addon-manager vim-airline vim-common vim-ctrlp vim-khuno vim-nox vim-scripts vim-snippets vim-syntastic vim-syntax-docker vim-ultisnips vim-youcompleteme
+    apt install -y vim-gtk
 fi
 
 # Configurações do sistema
-curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/.vimrc -o /etc/vim/vimrc.local
+curl --create-dirs -sfLo /usr/share/vim/vim80/autoload/plug.vim \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-# Configurando scripts e plugins
-echo "Para habilitar addons em nivel de usuario execute:"
-echo "$ vim-addons install closetag surround taglist youcompleteme markdown ctrlp"
+curl --create-dirs -sFLo /etc/vim/vimrc.local \
+  https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/vimrc.local
+
+# Instalando Plugins
+echo "Para instalar os plugins execute o comando PlugInstall no vi"
