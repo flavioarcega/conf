@@ -1,19 +1,31 @@
 highlight ColorColumn ctermbg=black
 
+" Plugins
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/vim-plug'
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch':'release'}
+call plug#end()
+
+set number
 set hidden
 set nobackup
 set nowritebackup
+set signcolumn=yes
 set cmdheight=2
+set shortmess=aFc
 set columns=130
 set colorcolumn=90
+set tabstop=4
 set shiftwidth=2
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set clipboard=unnamedplus
 set titlestring=%F
-"set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+"set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+
 
 " Default filebrowser options
 let g:netrw_altv=0                     "open files at right
@@ -26,45 +38,54 @@ let g:netrw_chgwin=2
 
 " Ale lint
 let g:ale_fix_on_save = 1
-let g:ale_fixers = {'python': ['isort', 'yapf', 'remove_trailing_lines', 'trim_whitespace']}
+let g:ale_fixers = {
+      \'*': ['remove_trailing_lines', 'trim_whitespace'],
+      \'java': [],
+      \'python': ['isort', 'yapf'],
+      \'javascript': ['eslint']
+      \}
 
 " coc.nvim
+let g:markdown_fenced_languages = ['css', 'js=javascript']
 let g:coc_global_extensions = [
-      \ 'coc-highlight',
-      \ 'coc-snippets', 
-      \ 'coc-lists', 
-      \ 'coc-yaml', 
-      \ 'coc-xml', 
-      \ 'coc-html',
-      \ 'coc-css', 
-      \ 'coc-json', 
-      \ 'coc-deno',
-      \ 'coc-python',
-      \ 'coc-java'
-      \ ]
+      \'coc-highlight',
+      \'coc-snippets',
+      \'coc-lists',
+      \'coc-pairs',
+      \'coc-yaml',
+      \'coc-xml',
+      \'coc-html',
+      \'coc-css',
+      \'coc-json',
+      \'coc-deno',
+      \'coc-python',
+      \'coc-java'
+      \]
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Use Tab for completion navigate
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+nmap gd <Plug>(coc-definition)
+nmap gt <Plug>(coc-type-definition)
+nmap gi <Plug>(coc-implementation)
+nmap gr <Plug>(coc-references)
+nmap gp <Plug>(coc-diagnostic-prev)
+nmap gn <Plug>(coc-diagnostic-next)
+nmap gI <Plug>(coc-diagnostic-info)
+nmap ge <Plug>(coc-diagnostic-next-error)
+nmap gE <Plug>(coc-diagnostic-next-error)
+nmap gw <Plug>(coc-openlink)
+nmap gqf <Plug>(coc-fix-current)
+nmap gqr <Plug>(coc-refactor)
+nmap gif <Plug>(coc-funcobj-i)
+nmap gaf <Plug>(coc-funcobj-a)
+
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 " Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+nmap <C-r> <Plug>(coc-rename)
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
@@ -80,8 +101,6 @@ xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
@@ -93,30 +112,31 @@ xmap <silent> <TAB> <Plug>(coc-range-select)
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 " use `:OR` for organize import of current buffer
-command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')
-
-
-" Plugins
-call plug#begin('~/.vim/plugged')
-Plug 'junegunn/vim-plug'
-"Plug 'dense-analysis/ale'
-Plug 'neoclide/coc.nvim', {'branch':'release'}
-"Plug 'neoclide/coc-eslint'
-"Plug 'neoclide/coc-tslint'
-"Plug 'neoclide/coc-highlight'
-call plug#end()
+command! -nargs=0 OR
 
 
 " Function keys
-map <F2> :Vexplore<CR>
-map <F3> :CocList outline<CR>
-map <F4> :OR<CR>
-map <F5> :call CocAction('format')<CR>
+nnoremap <F1> :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+nmap <F2> :Vexplore<CR>
+nmap <F3> :CocList files<CR>
+nmap <F4> :CocList tags<CR>
+nmap <F5> :CocList outline<CR>
+nmap <F7> :%!deno fmt --stdout %<CR>
+nmap <F8> <Plug>(ale_fix)<CR>
+nmap <F9> :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
 
 " Buffers navigation
-map <C-j> :bp<CR>
-map <C-l> :bn<CR>
-map <C-f> :%!deno fmt --stdout %<CR>
+nmap <C-j> :bp<CR>
+nmap <C-l> :bn<CR>
+nmap <C-f> :call CocAction('format')<CR>
+vmap <C-f> <Plug>(coc-format-selected)<CR>
 
 " Window scaling
 nmap <A-Up> <C-w>+
