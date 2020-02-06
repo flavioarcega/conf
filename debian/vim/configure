@@ -8,7 +8,7 @@ fi
 # Script de configuração do vim
 dpkg -s vim | grep -q installed
 if [ ! $? ]; then
-    apt install -y vim-gtk
+    apt install -y vim-gtk3
 fi
 
 # Configurações do sistema
