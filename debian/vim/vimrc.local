@@ -3,18 +3,19 @@ highlight ColorColumn ctermbg=black
 " Plugins
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug'
-Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch':'release'}
+" Plug 'dense-analysis/ale'
 call plug#end()
 
 set number
 set hidden
 set nobackup
 set nowritebackup
+set ignorecase
 set signcolumn=yes
 set cmdheight=2
 set shortmess=aFc
-set columns=130
+"set columns=130
 set colorcolumn=90
 set tabstop=4
 set shiftwidth=2
@@ -25,7 +26,6 @@ set clipboard=unnamedplus
 set titlestring=%F
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 "set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
-
 
 " Default filebrowser options
 let g:netrw_altv=0                     "open files at right
@@ -46,7 +46,8 @@ let g:ale_fixers = {
       \}
 
 " coc.nvim
-let g:markdown_fenced_languages = ['css', 'js=javascript']
+let g:coc_extension_root = "~/.vim/coc/extensions"
+let g:coc_filetype_map = {'ts': 'typescript' }
 let g:coc_global_extensions = [
       \'coc-highlight',
       \'coc-snippets',
@@ -57,15 +58,22 @@ let g:coc_global_extensions = [
       \'coc-html',
       \'coc-css',
       \'coc-json',
+	  \'coc-tsserver',
       \'coc-deno',
       \'coc-python',
       \'coc-java'
       \]
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
 " Use Tab for completion navigate
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+inoremap <silent><expr> <Tab>   pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<Tab>"   : coc#refresh()
+inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : <SID>check_back_space() ? "\<S-Tab>" : coc#refresh()
+" Use <c-space> to trigger completion
+inoremap <silent><expr> <c-space> coc#refresh()
+" Use <CR> to confirm completion
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 " Remap keys for gotos
 nmap gd <Plug>(coc-definition)
 nmap gt <Plug>(coc-type-definition)

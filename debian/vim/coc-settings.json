@@ -1,6 +1,19 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["markdown", "java", "python", "css", "javascript", "typescript"],
+  "coc.preferences.formatOnSaveFiletypes": [
+    "markdown",
+    "python",
+    "java",
+    "css",
+    "javascript"
+  ],
+  "coc.preferences.rootPatterns": [
+  	".git",
+	"pom.xml",
+	"package.json"
+  ],
   "python.linting.flake8Enabled": true,
-  "deno.enable": true,
-  "java.home": "/usr/lib/jvm/java-8-openjdk"
+  "java.home": "/usr/lib/jvm/java-11-openjdk",
+  "java.format.enabled": true,
+  "java.import.maven.enabled": true,
+  "java.autobuild.enabled": true
 }
