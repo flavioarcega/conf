@@ -1,8 +1,8 @@
 {
+  "coc.preferences.extensionUpdateCheck": "daily",
   "coc.preferences.formatOnSaveFiletypes": [
     "markdown",
     "python",
-    "java",
     "css",
     "javascript"
   ],
@@ -12,6 +12,7 @@
 	"package.json"
   ],
   "python.linting.flake8Enabled": true,
+  "python.venvPath": "~/.local/share/virtualenvs",
   "java.home": "/usr/lib/jvm/java-11-openjdk",
   "java.format.enabled": true,
   "java.import.maven.enabled": true,
