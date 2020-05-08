@@ -8,19 +8,40 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-echo "Instalando jdks..."
+function remove() {
+	for vm in /usr/lib/jvm/*
+	do
+		for bin in $vm/bin/*
+		do
+			BASE="$BASE:$(basename $bin)"
+		done
+	done
 
-PRIORITY=1000
-update-alternatives --remove-all java &> /dev/null
-for dir in /usr/lib/jvm/java-*; do
-  echo
-  SLAVES=""
-  for bin in $dir/bin/*; do
-    echo "$bin"
-    if [ "$(basename $bin)" != "java" ]; then
-      SLAVES="--slave /usr/bin/$(basename $bin) $(basename $bin) $bin $SLAVES"
-    fi
-  done
-  update-alternatives --install /usr/bin/java java $dir/bin/java $PRIORITY $SLAVES
-  PRIORITY=$(echo "$PRIORITY + 50" | bc)
-done
+	while read PR
+	do
+		echo "Removendo $PR"
+		update-alternatives --remove-all $PR &> /dev/null
+	done < <(echo $BASE | tr ':' '\n' | sort -u)
+}
+
+function install() {
+	PRIORITY=1000
+	for dir in /usr/lib/jvm/java-*
+	do
+		echo
+		SLAVES=""
+		for bin in $dir/bin/*; do
+			echo "$bin"
+			if [ "$(basename $bin)" != "java" ]; then
+				SLAVES="--slave /usr/bin/$(basename $bin) $(basename $bin) $bin $SLAVES"
+			fi
+		done
+		echo "Instalando $dir"
+		update-alternatives --install /usr/bin/java java $dir/bin/java $PRIORITY $SLAVES
+		PRIORITY=$(echo "$PRIORITY + 50" | bc)
+	done
+}
+
+remove
+echo
+install
