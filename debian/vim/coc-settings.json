@@ -16,5 +16,8 @@
   "java.home": "/usr/lib/jvm/java-11-openjdk",
   "java.format.enabled": true,
   "java.import.maven.enabled": true,
-  "java.autobuild.enabled": true
+  "java.autobuild.enabled": true,
+  "tsserver.log": "off",
+  "eslint.filetypes": ["javascript","typescript"],
+  "deno.enable": true
 }
