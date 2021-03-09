@@ -1,3 +1,5 @@
+" C-J jump next placeholder
+
 highlight ColorColumn ctermbg=black
 
 " Plugins
@@ -6,25 +8,42 @@ Plug 'junegunn/vim-plug'
 Plug 'neoclide/coc.nvim', {'branch':'release'}
 Plug 'honza/vim-snippets'
 Plug 'tpope/vim-surround'
+Plug 'jiangmiao/auto-pairs'
 Plug 'ap/vim-css-color'
+" Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+" Plug 'posva/vim-vue'
+Plug 'leafOfTree/vim-vue-plugin'
+Plug 'lepture/vim-jinja'
+Plug 'Vimjas/vim-python-pep8-indent'
+" Plug 'Quramy/tsuquyomi'
 " Plug 'dense-analysis/ale'
 " Plug 'rust-lang/rust.vim'
+" Plug 'numirias/semshi' somente nvim
+Plug 'liuchengxu/vista.vim'
+Plug 'mhinz/vim-startify'
 call plug#end()
 
+set mouse=
+set ttymouse=
 set number
+set hlsearch
 set relativenumber
 set hidden
 set nobackup
+set noswapfile
 set nowritebackup
 set ignorecase
+set smartcase
 set signcolumn=yes
 set cmdheight=2
-set shortmess=aFc
+set shortmess+=c
+"set shortmess=aFc
 "set columns=130
 set colorcolumn=90
-set tabstop=4
+set tabstop=2
 set shiftwidth=2
+set softtabstop=2
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
@@ -44,21 +63,23 @@ let g:netrw_list_hide='.*\.swp$,\.git,__pycache__,bin,include,lib,lib64,share,py
 let g:netrw_chgwin=2
 
 " Ale lint
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-      \'*': ['remove_trailing_lines', 'trim_whitespace'],
-      \'java': [],
-      \'python': ['isort', 'yapf'],
-      \'javascript': ['eslint']
-      \}
+"let g:ale_fix_on_save = 1
+"let g:ale_fixers = {
+"      \'*': ['remove_trailing_lines', 'trim_whitespace'],
+"      \'java': [],
+"      \'python': ['isort', 'yapf'],
+"      \'javascript': ['eslint']
+"      \}
 
+let g:coc_disable_startup_warning = 1
 " coc.nvim
-let g:coc_extension_root = "~/.vim/coc/extensions"
-let g:coc_filetype_map = {'ts': 'typescript' }
+let g:coc_data_home = "~/.vim/coc"
+"let g:coc_filetype_map = {'typescript': 'ts' }
 let g:coc_global_extensions = [
-      \'coc-highlight',
       \'coc-snippets',
+      \'coc-syntax',
       \'coc-lists',
+      \'coc-tag',
       \'coc-pairs',
       \'coc-yaml',
       \'coc-xml',
@@ -66,13 +87,14 @@ let g:coc_global_extensions = [
       \'coc-emmet',
       \'coc-css',
       \'coc-json',
-	  \'coc-tsserver',
-	  \'coc-eslint',
-	  \'coc-prettier',
+      \'coc-tsserver',
+      \'coc-eslint',
+      \'coc-vetur',
       \'coc-deno',
       \'coc-python',
       \'coc-java'
       \]
+" \'coc-prettier',
 " Use Tab for completion navigate
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -84,26 +106,32 @@ inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : <SID>check_back_space(
 inoremap <silent><expr> <c-space> coc#refresh()
 " Use <CR> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+" Remap for rename current word
+nmap gr <Plug>(coc-rename)
+" Coc Open
+nmap <leader>d <Plug>(coc-definition)
+nmap <leader>t <Plug>(coc-type-definition)
+nmap <leader>i <Plug>(coc-implementation)
+nmap <leader>r <Plug>(coc-references)
+" Buscar pelo arquivo under cursor
+nmap <leader>F  :exec 'CocList --input='.expand('<cword>').' files'<CR>
+
 " Remap keys for gotos
-nmap gd <Plug>(coc-definition)
-nmap gt <Plug>(coc-type-definition)
-nmap gi <Plug>(coc-implementation)
-nmap gr <Plug>(coc-references)
-nmap gp <Plug>(coc-diagnostic-prev)
-nmap gn <Plug>(coc-diagnostic-next)
-nmap gI <Plug>(coc-diagnostic-info)
-nmap ge <Plug>(coc-diagnostic-next-error)
-nmap gE <Plug>(coc-diagnostic-next-error)
-nmap gw <Plug>(coc-openlink)
-nmap gqf <Plug>(coc-fix-current)
-nmap gqr <Plug>(coc-refactor)
-nmap gif <Plug>(coc-funcobj-i)
-nmap gaf <Plug>(coc-funcobj-a)
+nmap <leader>[ <Plug>(coc-diagnostic-prev)
+nmap <leader>] <Plug>(coc-diagnostic-next)
+"nmap Ci <Plug>(coc-diagnostic-info)
+"nmap CI :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+"nmap Ce <Plug>(coc-diagnostic-next-error)
+"nmap CE <Plug>(coc-diagnostic-next-error)
+"nmap Cw <Plug>(coc-openlink)
+"nmap Cqf <Plug>(coc-fix-current)
+"nmap Cqr <Plug>(coc-refactor)
+"nmap Cif <Plug>(coc-funcobj-i)
+"nmap Caf <Plug>(coc-funcobj-a)
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
-" Remap for rename current word
-nmap <C-r> <Plug>(coc-rename)
+
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
@@ -114,6 +142,7 @@ augroup mygroup
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
+
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
@@ -125,16 +154,18 @@ xmap af <Plug>(coc-funcobj-a)
 omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
 " Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
+"nmap <silent> <TAB> <Plug>(coc-range-select)
+"xmap <silent> <TAB> <Plug>(coc-range-select)
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 " use `:OR` for organize import of current buffer
-command! -nargs=0 OR
+command! -nargs=0 W :w|bde
+command! -nargs=0 Q :bde
 
 
 " Function keys
-nnoremap <F1> :call <SID>show_documentation()<CR>
+nnoremap <silent><F1> :call <SID>show_documentation()<CR>
+nnoremap <silent> K   :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -142,19 +173,21 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
+
 nmap <F2> :Vexplore<CR>
 nmap <F3> :CocList files<CR>
 nmap <F4> :CocList tags<CR>
 nmap <F5> :CocList outline<CR>
 nmap <F7> :%!deno fmt --stdout %<CR>
-nmap <F8> <Plug>(ale_fix)<CR>
-nmap <F9> :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+nmap <F8> :CocAction<CR>
+nmap <F9> :CocCommand<CR>
 
 " Buffers navigation
-nmap <C-j> :bp<CR>
-nmap <C-l> :bn<CR>
-nmap <C-f> :call CocAction('format')<CR>
-vmap <C-f> <Plug>(coc-format-selected)<CR>
+nmap <C-y> :bp<CR>
+nmap <C-h> :bn<CR>
+nmap <C-d> :q<CR>
+"nmap <C-f> :call CocAction('format')<CR>
+"vmap <C-f> <Plug>(coc-format-selected)<CR>
 
 " Window scaling
 nmap <A-Up> <C-w>+
@@ -169,6 +202,9 @@ imap =" =""<Left>
 "" no one is really happy until you have this shortcuts
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
-cnoreabbrev W w
-cnoreabbrev Q q
+"cnoreabbrev Q qa
 cnoreabbrev X x
+cnoreabbrev T belowright terminal
+
+
+autocmd FileType jinja.html let b:surround_45 = "{%- \r %}"
