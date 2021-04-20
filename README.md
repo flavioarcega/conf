@@ -1,1 +1,1 @@
-Códigos quebra-galho
+Configurações
