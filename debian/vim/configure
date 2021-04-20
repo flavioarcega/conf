@@ -15,9 +15,7 @@ fi
 curl --create-dirs -sfLo /usr/share/vim/plug.vim \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-curl --create-dirs -sfLo /etc/vim/vimrc.local \
-  https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/vimrc.local
+curl --create-dirs -sfLo ~/.vim/vimrc \
+  https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/vimrc
 
-# Instalando Plugins
-echo "Não esquecer de incluir o /usr/share/vim/plug.vim"
-echo "Para instalar os plugins execute o comando PlugInstall no vi"
+vim -c ":PlugInstall"

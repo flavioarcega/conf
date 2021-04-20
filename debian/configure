@@ -28,6 +28,26 @@ cp chromium.desktop ~/.config/autostart/
 curl --create-dirs -sfLo ~/.bash_aliases \
   https://raw.githubusercontent.com/flavioarcega/utils/master/debian/.bash_aliases
 
+# bashrc
+echo >> ~/.bashrc
+echo "# Configurações script" >> ~/.bashrc
+echo "export DENO_INSTALL=\"/home/flavio/.local\"" >> ~/.bashrc
+echo >> ~/.bashrc
+echo "neofetch" >> ~/.bashrc
+echo >> ~/.bashrc
+echo "ww() {" >> ~/.bashrc
+echo "	if [ -n "$1" ]; then" >> ~/.bashrc
+echo "		VIMS=$1" >> ~/.bashrc
+echo "	else" >> ~/.bashrc
+echo "		cd ~/gitlab.com/flavioarcega/wiki/" >> ~/.bashrc
+echo "		ls -d [0-9]_*" >> ~/.bashrc
+echo "		cd - &>/dev/null" >> ~/.bashrc
+echo "		read -p "Digite um número: " VIMS" >> ~/.bashrc
+echo "	fi" >> ~/.bashrc
+echo "	vim -S ~/gitlab.com/flavioarcega/wiki/$VIMS.vim" >> ~/.bashrc
+echo "}" >> ~/.bashrc
+
+
 # Script de configuração do vim
 curl -s https://raw.githubusercontent.com/flavioarcega/utils/master/debian/vim/configure | sh
 
