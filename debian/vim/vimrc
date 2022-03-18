@@ -1,8 +1,29 @@
-syntax on
-filetype plugin indent on
-highlight ColorColumn ctermbg=black
+" Dicas:
+" :ab fca Flávio Casas de Arcega      < cria abreviação
+" :una fca                            < remove abreviação
+" :5,10m 15                           < move as linhas 5,10 para a 15
+" ;                                   < repete o ultimo movimento para frente
+" ,                                   < repete o ultimo movimento para trás
+" ~                                   < alterna o case
+" z=																	< spelling suggestions
+" \ll																	< transforma em list
+" \lt																	< transforma em checkbox
+" \-																	< altera valor do checkbox down
+" \=																	< altera valor do checkbox up
+" mks                                 < salva a sessão
+" vim -S Session.vim                  < carrega a sessão
 
-set spell
+filetype plugin indent on
+
+syntax on
+
+hi Pmenu guibg=black
+hi CocFloating guibg=black
+hi FgCocWarningFloatBgCocFloating guibg=black
+
+set exrc
+set timeoutlen=1500
+"set spell
 set spelllang=en_us,pt_br
 set mouse=
 set ttymouse=
@@ -27,7 +48,7 @@ set wildmenu
 set wildcharm=<C-z>                           "Macro-compatible command-line wildchar
 set termguicolors
 set conceallevel=2
-set expandtab
+"set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -38,13 +59,14 @@ set clipboard=unnamedplus
 set backspace=indent,eol,start
 set formatoptions=tcroql
 set titlestring=%F
-"set statusline^=%{coc#status()}
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+set laststatus=2
+set statusline^=%{coc#status()}
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 "set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 set path+=**      " para usar o :find recursivamente (dica use em conjunto com :b)
 set tags+=,tags;  " Find tags relative to current file and directory
 set t_BE=         " Disable bracketed paste mode
-setl wildignore=**/node_modules/**,**/dist/**,*.pyc
+setl wildignore=**/node_modules/**,**/dist/**,**/__pycache__/**,*.pyc,*.class
 
 
 " -----------------------------------------
@@ -54,11 +76,13 @@ let g:netrw_winsize=-30                "size of file browser window
 let g:netrw_banner=1                   "no information banner
 let g:netrw_fastbrowse=1
 let g:netrw_liststyle=3                "tree list style
-let g:netrw_list_hide='.*\.swp$,\.git,__pycache__,bin,include,lib,lib64,share,pyvenv.cfg,.classpath,.project,.settings' "hide swap files
+let g:netrw_list_hide='.*\.swp$,\.git,__pycache__,node_modules,bin,include,lib,lib64,share,pyvenv.cfg,.classpath,.project,.settings,target' "hide swap files
 "let g:netrw_chgwin=2
 
+" Atalho para as anotações
+nnoremap <leader>n :cd ~/gitlab.com/flavioarcega/notes <bar> e README.md<CR>
+
 " If file does not exists, create
-map gf :e <cfile><CR>
 nmap <F2> :Explore .<CR>
 
 " Buffers navigation
@@ -73,8 +97,8 @@ nmap <A-Left> <C-w><
 nmap <A-Right> <C-w>>
 
 " Autocomplete
-imap =' =''<Left>
-imap =" =""<Left>
+"imap =' =''<Left>
+"imap =" =""<Left>
 
 " Sinônimos na digitação
 cnoreabbrev W! w!
@@ -82,67 +106,162 @@ cnoreabbrev Q! q!
 cnoreabbrev X x
 cnoreabbrev T belowright terminal
 
-autocmd FileType jinja.html let b:surround_45 = "{%- \r %}"                                  
+" Mostrar o highlight sob o cursor
+command! HI :echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 
+command! -nargs=0 W :w|bde
+command! -nargs=0 Q :bde
+
+"autocmd FileType jinja.html let b:surround_45 = "{%- \r %}"
 
 " Plugins
 call plug#begin('~/.vim/plugged')
   Plug 'junegunn/vim-plug'
+	Plug 'mateusbraga/vim-spell-pt-br', {'for':'markdown'}
+	Plug 'larsbs/vimterial_dark'
+	Plug 'sainnhe/sonokai'
   Plug 'neoclide/coc.nvim', {'branch':'release'}
-  " Plug 'vimwiki/vimwiki'
-  " Plug 'Rykka/riv.vim'
-  Plug 'plasticboy/vim-markdown'
-  " Plug 'tpope/vim-markdown' somente syntax highlight
+  "Plug 'vimwiki/vimwiki'
+  "Plug 'Rykka/riv.vim'
+  "Plug 'diepm/vim-rest-console'
+  Plug 'tacsiazuma/easyjava.vim', {'for':'java'}
+	Plug 'puremourning/vimspector'
+	Plug 'SidOfc/mkdx'
+  "Plug 'jkramer/vim-checkbox', {'for':'markdown'} " leader tt
+  "Plug 'plasticboy/vim-markdown'
+  "Plug 'tpope/vim-markdown' somente syntax highlight
+  "Plug 'vim-pandoc/vim-pandoc'
+  "Plug 'vim-pandoc/vim-pandoc-syntax'
   Plug 'godlygeek/tabular'
-  Plug 'jkramer/vim-checkbox' " leader tt
+	"Plug 'fmoralesc/vim-pad', {'branch':'devel'}
   Plug 'honza/vim-snippets'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-fugitive'
-  Plug 'jiangmiao/auto-pairs'
-  Plug 'ap/vim-css-color'
-  " Plug 'pangloss/vim-javascript'
+  Plug 'tpope/vim-dispatch'
+  "Plug 'jiangmiao/auto-pairs'
+  "Plug 'ap/vim-css-color'
+  Plug 'pangloss/vim-javascript'
   Plug 'leafgarland/typescript-vim'
-  " Plug 'posva/vim-vue'
-  Plug 'leafOfTree/vim-vue-plugin'
+  "Plug 'posva/vim-vue'
+  "Plug 'burnettk/vim-angular'
+  "Plug 'leafOfTree/vim-vue-plugin'
   Plug 'lepture/vim-jinja'
   Plug 'Vimjas/vim-python-pep8-indent'
-  " Plug 'Quramy/tsuquyomi'
-  " Plug 'dense-analysis/ale'
-  " Plug 'rust-lang/rust.vim'
-  " Plug 'numirias/semshi' somente nvim
+  "Plug 'Quramy/tsuquyomi'
+  "Plug 'dense-analysis/ale'
+  "Plug 'rust-lang/rust.vim'
+  "Plug 'numirias/semshi' somente nvim
   Plug 'liuchengxu/vista.vim'
-  " Plug 'mhinz/vim-startify'
+  Plug 'michaeljsmith/vim-indent-object'
+  Plug 'kana/vim-textobj-user'
+  Plug 'glts/vim-textobj-comment'
+  Plug 'vimtaku/vim-textobj-keyvalue'
+  Plug 'uiiaoo/java-syntax.vim'
 call plug#end()
 
+highlight link javaIdentifier NONE
+highlight link javaDelimiter NONE
+
+let g:sonokai_style = 'espresso'
+let g:sonokai_transparent_background = 1
+let g:sonokai_enable_italic = 1
+let g:sonokai_disable_italic_comment = 1
+
+colorscheme sonokai "vimterial_dark
+
+" ----------------------------------------
+" Plugin para markdown mkdx
+" ----------------------------------------
+let g:mkdx#settings = { 
+\  'toc.update_on_write': 1,
+\  'toc.text': 'INDICE',
+\  'highlight.enable': 1,
+\  'enter.shift': 0
+\}
+
+map <C-E> <Plug>(mkdx-enter)
+
+" Complementando o plugin
+function! s:hasCheckbox(line)
+	if matchstr(a:line, '\[ \]') == ""
+		return 0
+	else
+		return 1
+	endif
+endfunc
+function! s:hasCheckboxChecked(line)
+	if matchstr(a:line, '\[[-x]\]') == ""
+		return 0
+	else
+		return 1
+	endif
+endfunc
+function! s:checklistNewLine(type)
+	let curLineNum = line('.')
+	let curLine = getline(curLineNum)
+	let nextLineNum = curLineNum + 1
+	if s:hasCheckbox(curLine)
+		" Find checkbox text
+		let split = split(curLine, "\]")
+		if len(split) == 1 || (len(split) > 1 && split[1] == " ")
+			" If current checkbox has no value, clear the line
+			call feedkeys("\<CR>", "n")
+		else
+			" Otherwise, create the next checkbox
+			call append(curLineNum, split[0]."] ")
+			call cursor(nextLineNum, 99)
+			if a:type == "o"
+				call feedkeys("a", "n")
+			endif
+		endif
+	else
+		if s:hasCheckboxChecked(curLine)
+			let split = split(curLine, "\]")
+			call append(curLineNum, repeat(' ', len(split[0])+2))
+			call cursor(nextLineNum, 99)
+			if a:type == "o"
+				call feedkeys("a", "n")
+			endif
+		else
+			if a:type == "cr"
+				call feedkeys("\<CR>", "n")
+			else
+				call feedkeys("o", "n")
+			endif
+		endif
+	endif
+	return ""
+endfunc
+autocmd FileType markdown inoremap <buffer> <silent> <cr> <C-R>=<SID>checklistNewLine('cr')<cr>
+autocmd FileType markdown nnoremap <buffer> <silent> o :call <SID>checklistNewLine('o')<cr>
+
+" -------------------------------------------
+" Show Syntax Highlighting Groups Ctrl+Shift+P
+" -------------------------------------------
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+nmap <C-S-P> :call <SID>SynStack()<CR>
+
+function! SyntaxItem()
+  return synIDattr(synID(line("."),col("."),1),"name")
+endfunction
+"set statusline=%{SyntaxItem()}
 
 " -------------------------------------------
 " https://github.com/plasticboy/vim-markdown
 " -------------------------------------------
-let g:vim_markdown_toml_frontmatter = 1
-let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 1
 let g:vim_markdown_strikethrough = 1
-let g:vim_markdown_autowrite = 1
+let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_edit_url_in = 'tab'
-let g:vim_markdown_folding_disabled=1
+let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_follow_anchor = 1
 let g:vim_markdown_anchorexpr = "'<<'.v:anchor.'>>'"
-
-
-" ------------------------------------------
-"  https://github.com/vim-scripts/UltiSnips
-" ------------------------------------------
-let g:UltiSnipsSnippetDirectories=["UltiSnips"]
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-" Sometimes UltiSnips does not auto reload snippets
-cnoreabbrev resnip call UltiSnips#RefreshSnippets() 
-nnoremap <leader>u :UltiSnipsEdit!<CR>
-
-" Use carriage returns as a surround character
-let g:surround_13 = "\n\t\r\n"
-
+let g:vim_markdown_no_extensions_in_markdown = 1
 
 " -------------------------------------
 " https://github.com/neoclide/coc.nvim
@@ -151,6 +270,7 @@ let g:coc_disable_startup_warning = 1
 let g:coc_data_home = "~/.vim/coc"
 "let g:coc_filetype_map = {'typescript': 'ts' }
 let g:coc_global_extensions = [
+      \'coc-diagnostic',
       \'coc-snippets',
       \'coc-syntax',
       \'coc-lists',
@@ -162,16 +282,21 @@ let g:coc_global_extensions = [
       \'coc-emmet',
       \'coc-css',
       \'coc-json',
+      \'coc-restclient',
       \'coc-tsserver',
       \'coc-eslint',
       \'coc-vetur',
-      \'coc-deno',
-      \'coc-python',
+      \'coc-pyright',
       \'coc-java'
       \]
+"      \'coc-deno',
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
+set updatetime=500 
+
+" Enable spell check
+autocmd FileType markdown,text setl spell
 
 augroup mygroup
   autocmd!
@@ -183,10 +308,6 @@ augroup end
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 W :w|bde
-command! -nargs=0 Q :bde
 
 " Use Tab for completion navigate
 function! s:check_back_space() abort
@@ -202,9 +323,6 @@ inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : <SID>check_back_space(
 " Use <CR> to confirm completion
 "inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 
-" Remap for rename current word
-"nmap gr <Plug>(coc-rename)
-
 " Help with coc.nvim
 nnoremap <silent><F1> :call <SID>show_documentation()<CR>
 nnoremap <silent> K   :call <SID>show_documentation()<CR>
@@ -217,23 +335,23 @@ function! s:show_documentation()
 endfunction
 
 " Leader keys
-nmap <leader>d <Plug>(coc-definition)
-nmap <leader>t <Plug>(coc-type-definition)
-nmap <leader>i <Plug>(coc-implementation)
-nmap <leader>r <Plug>(coc-references)
-" Buscar pelo arquivo under cursor
-nmap <leader>F :exec 'CocList --input='.expand('<cword>').' files'<CR>
+nmap <leader>d  <Plug>(coc-definition)
+nmap <leader>t  <Plug>(coc-type-definition)
+nmap <leader>i  <Plug>(coc-implementation)
+nmap <leader>r  <Plug>(coc-references)
 " Remap keys for gotos
-nmap <leader>[ <Plug>(coc-diagnostic-prev)
-nmap <leader>] <Plug>(coc-diagnostic-next)
+nmap <leader>[  <Plug>(coc-diagnostic-prev)
+nmap <leader>]  <Plug>(coc-diagnostic-next)
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+" Organize imports
+nmap <leader>o  :CocCommand editor.action.organizeImport<CR>
+" Buscar pelo arquivo under cursor
+nmap <leader>F  :exec 'CocList --input='.expand('<cword>').' files'<CR>
+" Remap for rename current word
+nmap <leader>R <Plug>(coc-rename)
+nmap <leader>q <Plug>(coc-fix-current)
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
@@ -245,9 +363,14 @@ omap af <Plug>(coc-funcobj-a)
 nmap <F3> :CocList files<CR>
 nmap <F4> :CocList tags<CR>
 nmap <F5> :CocList outline<CR>
-nmap <F8> :CocAction<CR>
+nmap <F8> <Plug>(coc-codeaction)
 nmap <F9> :CocCommand<CR>
 
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
+" Remap for do codeAction of current line
+"nmap <leader>ac <Plug>(coc-codeaction)
 
 " ------------------
 " https://deno.land

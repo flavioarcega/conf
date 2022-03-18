@@ -8,12 +8,27 @@
   ],
   "coc.preferences.rootPatterns": [
   	".git",
-	"pom.xml",
-	"package.json"
+		"pom.xml",
+		"package.json"
   ],
+	"list.source.files.command": "",
+	"list.source.files.excludePatterns": [
+		"**/.git/*",
+		"**/.gitignore",
+		"**/node_modules/**",
+		"**/.settings/**",
+		"**/.classpath",
+		"**/.project",
+		"**/target/**"
+	],
+	"list.source.mru.excludePatterns": [
+		"**/.git/*",
+		"**/node_modules/**",
+		"**/target/**"
+	],
   "python.linting.flake8Enabled": true,
   "python.venvPath": "~/.local/share/virtualenvs",
-  "java.home": "/usr/lib/jvm/java-11-openjdk",
+  "java.home": "/usr/lib/jvm/java-13-openjdk",
   "java.format.enabled": true,
   "java.import.maven.enabled": true,
   "java.autobuild.enabled": true,

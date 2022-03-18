@@ -33,6 +33,8 @@ updateExes() {
     prioridade=`echo "$prioridade + 10" | bc`
     update-alternatives --install /usr/bin/node node $dir/bin/node $prioridade $SLAVES 2>&1 > /dev/null
   done
+	chown -R root:root /usr/lib/node
+	chmod -R a+r /usr/lib/node/*
   echo $MENSAGEM
 }
 
