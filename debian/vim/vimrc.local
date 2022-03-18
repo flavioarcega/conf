@@ -1,0 +1,121 @@
+" --------------------
+"  Configurações base
+" --------------------
+filetype plugin indent on
+colorscheme desert
+syntax on
+
+set exrc
+set timeoutlen=1500
+"set spell
+set spelllang=en_us,pt_br
+set mouse=
+set ttymouse=
+set linebreak
+"set autochdir
+set number
+set hlsearch
+set relativenumber
+set hidden
+"set lazyredraw                               "do not draw screen on macro
+set nobackup
+set noswapfile
+set nowritebackup
+set ignorecase
+set smartcase
+"set signcolumn=yes
+"set colorcolumn=89
+set cmdheight=2
+set shortmess+=c
+"set shortmess=aFc
+set wildmenu
+set wildcharm=<C-z>                           "Macro-compatible command-line wildchar
+set termguicolors
+set conceallevel=2
+"set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+set clipboard=unnamedplus
+set backspace=indent,eol,start
+set formatoptions=tcroql
+set titlestring=%F
+set laststatus=2
+set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+set path+=**      " para usar o :find recursivamente (dica use em conjunto com :b)
+set tags+=,tags;  " Find tags relative to current file and directory
+set t_BE=         " Disable bracketed paste mode
+setl wildignore=**/node_modules/**,**/dist/**,**/__pycache__/**,*.pyc,*.class
+
+
+" ----------
+"  Autocmds
+" ----------
+" Habilitando o spell check
+autocmd FileType markdown,text setl spell
+" Inserindo tags jinja automaticamente
+"autocmd FileType jinja.html let b:surround_45 = "{%- \r %}"
+
+
+" -------------
+"  Mapeamentos
+" -------------
+" Atalho para as anotações
+nmap <leader>n :cd ~/gitlab.com/flavioarcega/notes <bar> e README.md<CR>
+" If file does not exists, create
+nmap <F2> :Explore .<CR>
+" Buffers navigation
+nmap <C-j> :bp<CR>
+nmap <C-k> :bn<CR>
+nmap <C-d> :q<CR>
+" Window scaling
+nmap <A-Up> <C-w>+
+nmap <A-Down> <C-w>-
+nmap <A-Left> <C-w><
+nmap <A-Right> <C-w>>
+" Autocomplete
+"imap =' =''<Left>
+"imap =" =""<Left>
+" Sinônimos na digitação
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev X x
+cnoreabbrev T belowright terminal
+
+
+" ----------
+"  Comandos
+" ----------
+command! -nargs=0 W :w|bde
+command! -nargs=0 Q :bde
+
+
+" ----------------------------------------------
+"  Show Syntax Highlighting Groups Ctrl+Shift+P
+" ----------------------------------------------
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+nmap <C-S-P> :call <SID>SynStack()<CR>
+
+function! SyntaxItem()
+  return synIDattr(synID(line("."),col("."),1),"name")
+endfunction
+"set statusline=%{SyntaxItem()}
+
+
+" -------
+"  netrw
+" -------
+let g:netrw_winsize=-30                "size of file browser window
+let g:netrw_banner=1                   "no information banner
+let g:netrw_fastbrowse=1
+let g:netrw_liststyle=3                "tree list style
+let g:netrw_list_hide='.*\.swp$,\.git,__pycache__,node_modules,bin,include,lib,lib64,share,pyvenv.cfg,.classpath,.project,.settings,target' "hide swap files
+"let g:netrw_chgwin=2

@@ -1,4 +1,6 @@
-" Dicas:
+" -----------
+"  Lembretes
+" -----------
 " :ab fca Flávio Casas de Arcega      < cria abreviação
 " :una fca                            < remove abreviação
 " :5,10m 15                           < move as linhas 5,10 para a 15
@@ -13,108 +15,11 @@
 " mks                                 < salva a sessão
 " vim -S Session.vim                  < carrega a sessão
 
-filetype plugin indent on
-
-syntax on
-
-hi Pmenu guibg=black
-hi CocFloating guibg=black
-hi FgCocWarningFloatBgCocFloating guibg=black
-
-set exrc
-set timeoutlen=1500
-"set spell
-set spelllang=en_us,pt_br
-set mouse=
-set ttymouse=
-set linebreak
-"set autochdir
-set number
-set hlsearch
-set relativenumber
-set hidden
-"set lazyredraw                               "do not draw screen on macro
-set nobackup
-set noswapfile
-set nowritebackup
-set ignorecase
-set smartcase
-"set signcolumn=yes
 set colorcolumn=89
-set cmdheight=2
-set shortmess+=c
-"set shortmess=aFc
-set wildmenu
-set wildcharm=<C-z>                           "Macro-compatible command-line wildchar
-set termguicolors
-set conceallevel=2
-"set expandtab
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set encoding=utf-8
-set fileencoding=utf-8
-set fileencodings=utf-8
-set clipboard=unnamedplus
-set backspace=indent,eol,start
-set formatoptions=tcroql
-set titlestring=%F
-set laststatus=2
-set statusline^=%{coc#status()}
-"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-"set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
-set path+=**      " para usar o :find recursivamente (dica use em conjunto com :b)
-set tags+=,tags;  " Find tags relative to current file and directory
-set t_BE=         " Disable bracketed paste mode
-setl wildignore=**/node_modules/**,**/dist/**,**/__pycache__/**,*.pyc,*.class
 
-
-" -----------------------------------------
-" https://github.com/vim-scripts/netrw.vim
-" -----------------------------------------
-let g:netrw_winsize=-30                "size of file browser window
-let g:netrw_banner=1                   "no information banner
-let g:netrw_fastbrowse=1
-let g:netrw_liststyle=3                "tree list style
-let g:netrw_list_hide='.*\.swp$,\.git,__pycache__,node_modules,bin,include,lib,lib64,share,pyvenv.cfg,.classpath,.project,.settings,target' "hide swap files
-"let g:netrw_chgwin=2
-
-" Atalho para as anotações
-nnoremap <leader>n :cd ~/gitlab.com/flavioarcega/notes <bar> e README.md<CR>
-
-" If file does not exists, create
-nmap <F2> :Explore .<CR>
-
-" Buffers navigation
-nmap <C-j> :bp<CR>
-nmap <C-k> :bn<CR>
-nmap <C-d> :q<CR>
-
-" Window scaling
-nmap <A-Up> <C-w>+
-nmap <A-Down> <C-w>-
-nmap <A-Left> <C-w><
-nmap <A-Right> <C-w>>
-
-" Autocomplete
-"imap =' =''<Left>
-"imap =" =""<Left>
-
-" Sinônimos na digitação
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev X x
-cnoreabbrev T belowright terminal
-
-" Mostrar o highlight sob o cursor
-command! HI :echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-
-command! -nargs=0 W :w|bde
-command! -nargs=0 Q :bde
-
-"autocmd FileType jinja.html let b:surround_45 = "{%- \r %}"
-
-" Plugins
+" ---------
+"  Plugins
+" ---------
 call plug#begin('~/.vim/plugged')
   Plug 'junegunn/vim-plug'
 	Plug 'mateusbraga/vim-spell-pt-br', {'for':'markdown'}
@@ -159,29 +64,30 @@ call plug#begin('~/.vim/plugged')
   Plug 'uiiaoo/java-syntax.vim'
 call plug#end()
 
+
+" ---------
+"  Sonokai
+" ---------
 highlight link javaIdentifier NONE
 highlight link javaDelimiter NONE
-
 let g:sonokai_style = 'espresso'
 let g:sonokai_transparent_background = 1
 let g:sonokai_enable_italic = 1
 let g:sonokai_disable_italic_comment = 1
-
 colorscheme sonokai "vimterial_dark
 
-" ----------------------------------------
-" Plugin para markdown mkdx
-" ----------------------------------------
+
+" ------
+"  MKDX
+" ------
 let g:mkdx#settings = { 
 \  'toc.update_on_write': 1,
 \  'toc.text': 'INDICE',
 \  'highlight.enable': 1,
 \  'enter.shift': 0
 \}
-
 map <C-E> <Plug>(mkdx-enter)
-
-" Complementando o plugin
+" Complementando a funcionalidade checkbox
 function! s:hasCheckbox(line)
 	if matchstr(a:line, '\[ \]') == ""
 		return 0
@@ -235,25 +141,10 @@ endfunc
 autocmd FileType markdown inoremap <buffer> <silent> <cr> <C-R>=<SID>checklistNewLine('cr')<cr>
 autocmd FileType markdown nnoremap <buffer> <silent> o :call <SID>checklistNewLine('o')<cr>
 
-" -------------------------------------------
-" Show Syntax Highlighting Groups Ctrl+Shift+P
-" -------------------------------------------
-function! <SID>SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-nmap <C-S-P> :call <SID>SynStack()<CR>
 
-function! SyntaxItem()
-  return synIDattr(synID(line("."),col("."),1),"name")
-endfunction
-"set statusline=%{SyntaxItem()}
-
-" -------------------------------------------
-" https://github.com/plasticboy/vim-markdown
-" -------------------------------------------
+" --------------
+"  vim-markdown
+" --------------
 let g:vim_markdown_new_list_item_indent = 1
 let g:vim_markdown_strikethrough = 1
 let g:vim_markdown_frontmatter = 1
@@ -263,9 +154,13 @@ let g:vim_markdown_follow_anchor = 1
 let g:vim_markdown_anchorexpr = "'<<'.v:anchor.'>>'"
 let g:vim_markdown_no_extensions_in_markdown = 1
 
-" -------------------------------------
-" https://github.com/neoclide/coc.nvim
-" -------------------------------------
+
+" ----------
+"  coc.nvim
+" ----------
+set statusline^=%{coc#status()}
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
 let g:coc_disable_startup_warning = 1
 let g:coc_data_home = "~/.vim/coc"
 "let g:coc_filetype_map = {'typescript': 'ts' }
@@ -291,12 +186,14 @@ let g:coc_global_extensions = [
       \]
 "      \'coc-deno',
 
+" Melhorando alguns highlights
+hi Pmenu guibg=black
+hi CocFloating guibg=black
+hi FgCocWarningFloatBgCocFloating guibg=black
+
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 set updatetime=500 
-
-" Enable spell check
-autocmd FileType markdown,text setl spell
 
 augroup mygroup
   autocmd!
@@ -372,7 +269,8 @@ nmap <F9> :CocCommand<CR>
 " Remap for do codeAction of current line
 "nmap <leader>ac <Plug>(coc-codeaction)
 
-" ------------------
-" https://deno.land
-" ------------------
+
+" ----------
+"  coc-deno
+" ----------
 nmap <F7> :%!deno fmt --stdout %<CR>
