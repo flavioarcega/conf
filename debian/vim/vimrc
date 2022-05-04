@@ -15,6 +15,7 @@
 " mks                                 < salva a sessão
 " vim -S Session.vim                  < carrega a sessão
 
+set modeline
 set colorcolumn=89
 
 " ---------
@@ -64,6 +65,21 @@ call plug#begin('~/.vim/plugged')
   Plug 'uiiaoo/java-syntax.vim'
 call plug#end()
 
+" ---------
+"  Folding
+" ---------
+let g:markdown_folding = 1
+function! MyFoldText()
+    let nblines = v:foldend - v:foldstart + 1
+    let w = 79 - &foldcolumn - (&number ? 8 : 0)
+    let line = getline(v:foldstart)
+    let comment = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
+    let expansionString1 = repeat(".", w - strwidth(nblines.comment))
+    let expansionString2 = repeat(" ", winwidth(0) - strwidth(nblines.comment.expansionString1))
+    let txt = comment . expansionString1 . nblines . expansionString2
+    return txt
+endfunction
+set foldtext=MyFoldText()
 
 " ---------
 "  Sonokai
