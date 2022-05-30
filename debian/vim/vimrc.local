@@ -59,10 +59,11 @@ autocmd FileType markdown,text setl spell
 " Inserindo tags jinja automaticamente
 "autocmd FileType jinja.html let b:surround_45 = "{%- \r %}"
 
-
 " -------------
 "  Mapeamentos
 " -------------
+" Change inner String
+nnoremap ciS ci"
 " Atalho para as anotações
 nmap <leader>n :cd ~/gitlab.com/flavioarcega/notes <bar> e README.md<CR>
 " If file does not exists, create
