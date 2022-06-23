@@ -247,6 +247,14 @@ inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : <SID>check_back_space(
 " Use <CR> to confirm completion
 "inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 
+" To scroll help windows
+let g:coc_snippet_next = '<c-l>'
+let g:coc_snippet_prev = '<c-h>'
+inoremap <silent><expr> <c-j> coc#float#has_float() ? coc#float#scroll(1) : "\<c-j>"
+inoremap <silent><expr> <c-k> coc#float#has_float() ? coc#float#scroll(-1) : "\<c-k>"
+vnoremap <silent><expr> <c-j> coc#float#has_float() ? coc#float#scroll(1) : "\<c-j>"
+vnoremap <silent><expr> <c-k> coc#float#has_float() ? coc#float#scroll(-1) : "\<c-k>"
+
 " Help with coc.nvim
 nnoremap <silent><F1> :call <SID>show_documentation()<CR>
 nnoremap <silent> K   :call <SID>show_documentation()<CR>
