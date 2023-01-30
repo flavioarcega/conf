@@ -30,7 +30,9 @@ set shortmess+=c
 "set shortmess=aFc
 set wildmenu
 set wildcharm=<C-z>                           "Macro-compatible command-line wildchar
+set splitbelow
 set termguicolors
+set termwinsize=12*200
 set conceallevel=2
 "set expandtab
 set tabstop=2
@@ -48,7 +50,7 @@ set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 set path+=**      " para usar o :find recursivamente (dica use em conjunto com :b)
 set tags+=,tags;  " Find tags relative to current file and directory
 set t_BE=         " Disable bracketed paste mode
-setl wildignore=**/node_modules/**,**/dist/**,**/__pycache__/**,*.pyc,*.class
+setl wildignore=**/node_modules/**,**/dist/**,**/__pycache__/**,*.pyc,*.class,**/target/**
 
 
 " ----------
