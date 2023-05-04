@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -xe
+
+sudo add-apt-repository -P neovim-ppa/stable -y
+sudo add-apt-repository -P neovim-ppa/unstable -y
+sudo apt upgrade -y
+sudo apt install neovim -y
+
+cd /tmp
+curl -sL https://github.com/flavioarcega/conf/archive/refs/heads/main.zip
+unzip main.zip
+mv conf-main/nvim ~/.config/
