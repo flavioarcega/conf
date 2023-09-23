@@ -4,3 +4,7 @@
 
 vim.opt.mouse = ""
 vim.opt.wrap = true
+
+-- opt.expandtab = true -- Use spaces instead of tabs
+
+vim.g.vim_markdown_new_list_item_indent = 1

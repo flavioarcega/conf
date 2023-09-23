@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -xe
+
+sudo add-apt-repository -P neovim-ppa/unstable -y
+sudo apt upgrade -y
+sudo apt install -y --auto-remove git-core neovim diodon psensor ffmpeg \
+	gimp gimp-data gimp-data-extras inkscape inkscape-open-symbols blender blender-data
+
+# neovim
+cd /tmp
+curl -sL https://github.com/flavioarcega/conf/archive/refs/heads/main.zip
+unzip main.zip
+mv conf-main/nvim ~/.config/
+
+# git
+git config --global branch.autosetuprebase always
