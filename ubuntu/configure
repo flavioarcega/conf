@@ -4,8 +4,9 @@ set -xe
 
 sudo add-apt-repository -P neovim-ppa/unstable -y
 sudo apt upgrade -y
-sudo apt install -y --auto-remove git-core neovim diodon psensor ffmpeg \
-	gimp gimp-data gimp-data-extras inkscape inkscape-open-symbols blender blender-data
+sudo apt install -y --auto-remove git-core build-essential neovim jq \
+	rsync rclone diodon psensor ffmpeg gimp gimp-data gimp-data-extras \
+	inkscape inkscape-open-symbols blender blender-data docker-ce
 
 # neovim
 cd /tmp
@@ -15,3 +16,48 @@ mv conf-main/nvim ~/.config/
 
 # git
 git config --global branch.autosetuprebase always
+
+# docker-ce
+sudo cat <<EOF >/usr/local/bin/docker-update-hosts
+#!/usr/bin/env bash
+set -e -u -o pipefail
+
+hosts_file=/etc/hosts
+begin_block="# BEGIN DOCKER CONTAINERS"
+end_block="# END DOCKER CONTAINERS"
+
+if ! grep -Fxq "$begin_block" "$hosts_file"; then
+  echo -e "\n${begin_block}\n${end_block}\n" >> "$hosts_file"
+fi
+
+(echo "| container start |" && docker events) | \
+while read event; do
+  if [[ "$event" == *" container start "* ]] || [[ "$event" == *" network disconnect "* ]]; then
+    hosts_file_tmp="$(mktemp)"
+    docker container ls -q | xargs -r docker container inspect | \
+    jq -r '.[]|"\(.NetworkSettings.Networks[].IPAddress|select(length > 0) // "# no ip address:") \(.Name|sub("^/"; "")|sub("_1$"; ""))"' | \
+    sed -ne "/^${begin_block}$/ {p; r /dev/stdin" -e ":a; n; /^${end_block}$/ {p; b}; ba}; p" "$hosts_file" \
+    > "$hosts_file_tmp"
+    chmod 644 "$hosts_file_tmp"
+    mv "$hosts_file_tmp" "$hosts_file"
+  fi
+done 
+EOF
+
+sudo cat <<EOF >/etc/systemd/system/docker-update-hosts.service
+[Unit]
+Description=Update Docker containers in /etc/hosts
+Requires=docker.service
+After=docker.service
+PartOf=docker.service
+
+[Service]
+ExecStart=/usr/local/bin/docker-update-hosts
+
+[Install]
+WantedBy=docker.service
+EOF
+
+systemctl daemon-reload
+systemctl enable docker-update-hosts.service
+systemctl start docker-update-hosts.service
