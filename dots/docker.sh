@@ -1,23 +1,8 @@
 #!/bin/bash
 
-set -xe
-
-sudo add-apt-repository -P neovim-ppa/unstable -y
-sudo apt upgrade -y
-sudo apt install -y --auto-remove git-core build-essential neovim jq \
-	rsync rclone diodon psensor ffmpeg gimp gimp-data gimp-data-extras \
-	inkscape inkscape-open-symbols blender blender-data docker-ce
-
-# neovim
-cd /tmp
-curl -sL https://github.com/flavioarcega/conf/archive/refs/heads/main.zip
-unzip main.zip
-mv conf-main/nvim ~/.config/
-
-# git
-git config --global branch.autosetuprebase always
-
-# docker-ce
+#############
+# docker-ce #
+#############
 sudo cat <<EOF >/usr/local/bin/docker-update-hosts
 #!/usr/bin/env bash
 set -e -u -o pipefail
@@ -41,8 +26,10 @@ while read event; do
     chmod 644 "$hosts_file_tmp"
     mv "$hosts_file_tmp" "$hosts_file"
   fi
-done 
+done
 EOF
+
+sudo chmod +x /usr/local/bin/docker-update-hosts
 
 sudo cat <<EOF >/etc/systemd/system/docker-update-hosts.service
 [Unit]

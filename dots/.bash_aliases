@@ -1,5 +1,6 @@
 alias ll='ls -alh'
 alias docker='sudo docker'
+alias pdfcompress='gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dQUIET -dBATCH -sOutputFile=compressed.pdf'
 
 alias upgrade="sudo apt update && sudo apt full-upgrade -y"
 alias upgrade-owrt="ssh owrt \"opkg update && opkg list-upgradable | awk '{ print $1 }' | xargs opkg upgrade\""
