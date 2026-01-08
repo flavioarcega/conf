@@ -1,11 +1,15 @@
-alias ll='ls -alh'
-alias docker='sudo docker'
-alias pdfcompress='gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dQUIET -dBATCH -sOutputFile=compressed.pdf'
+# Better ls
+alias ls='lsd --group-directories-first -h'
+alias ll='lsd --group-directories-first -hl'
+alias lst='lsd --group-directories-first --tree --depth=2 -h'
+alias cdd='cd $(fd -t d --search-path "~/Documents" | fzf)'
 
+# Utils
 alias upgrade="sudo apt update && sudo apt full-upgrade -y"
-alias upgrade-owrt="ssh owrt \"opkg update && opkg list-upgradable | awk '{ print $1 }' | xargs opkg upgrade\""
-
+alias optpng='optipng -strip all -o7 '
+alias pdfcompress='gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dQUIET -dBATCH -sOutputFile=compressed.pdf'
 alias curlspeed='curl -s -w "Testing Website Response Time for: %{url_effective}\n\nLookup Time:\t\t%{time_namelookup}\nConnect Time:\t\t%{time_connect}\nAppCon Time:\t\t%{time_appconnect}\nRedirect Time:\t\t%{time_redirect}\nPre-transfer Time:\t%{time_pretransfer}\nStart-transfer Time:\t%{time_starttransfer}\n\nTotal Time:\t\t%{time_total}\n" -o /dev/null'
+alias docker='sudo docker'
 
 # Rust
 alias rust-config='source ~/.cargo/env'
